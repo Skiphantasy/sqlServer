@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿/*
+ * EXERCISE............: Exercise 12.
+ * NAME AND LASTNAME...: Tania López Martín 
+ * CURSE AND GROUP.....: 2º Interface Development 
+ * PROJECT.............: SQL Server
+ * DATE................: 13 Mar 2019
+ */
+
+
+using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Exercise12
 {
@@ -22,21 +26,6 @@ namespace Exercise12
             dgvData = this.dgvInsert;
             Console.WriteLine(frmMenu.TableText);
             GetData("select * from " + frmMenu.TableText);
-        }
-
-        public void CorrectWindowSize()
-        {
-            int width = WinObjFunctions.CountGridWidth(dgvData);
-            int height = WinObjFunctions.CountGridHeight(dgvData);
-            if(width >= 800)
-            {
-                dgvData.Width = ClientSize.Width - 50;
-                ClientSize = new Size(dgvData.Width + 25, dgvData.Height+ 20);
-            } else
-            {
-                dgvData.Width = width;
-                ClientSize = new Size(dgvData.Width + 30, dgvData.Height + 20);
-            }                               
         }
 
         private void GetData(string selectCommand)
@@ -55,19 +44,125 @@ namespace Exercise12
                     dataAdapter.Fill(currentTable);
                     dgvInsert.DataSource = currentTable;
                 }
-
-
-                // Resize the DataGridView columns to fit the newly loaded content.
+               
                 dgvInsert.AutoResizeColumns(
                    DataGridViewAutoSizeColumnsMode.AllCells);
                 dgvInsert.DataSource = (dgvInsert.DataSource as DataTable).Clone();
-               CorrectWindowSize();
             }
             catch (SqlException)
             {
-                MessageBox.Show("To run this example, replace the value of the " +
-                    "connectionString variable with a connection string that is " +
-                    "valid for your system.");
+                MessageBox.Show("Error al conectar a la base de datos");
+            }
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            string StrQuery;
+            string connectionString =
+                    "Data Source=SKIPHA\\SQLEXPRESS;" +
+                    "Initial Catalog=DBCompany;Integrated Security=True";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand comm = new SqlCommand())
+                    {
+                        comm.Connection = conn;
+                        conn.Open();
+                        int number;
+                        
+                        StrQuery = @" SET IDENTITY_INSERT " + frmMenu.TableText + " ON INSERT INTO " + frmMenu.TableText  + " (";
+
+                        for (int j = 0; j < dgvData.Columns.Count; j++)
+                        {
+                            if( j == (dgvData.Columns.Count - 1))
+                            {
+                                StrQuery += dgvData.Columns[j].HeaderText + ")";
+                            } else
+                            {
+                                StrQuery += dgvData.Columns[j].HeaderText + ", ";
+                            }
+
+                        }
+
+                        StrQuery += " VALUES (";
+
+                        for (int i = 0; i < dgvData.Rows.Count; i++)
+                        {
+
+                            for (int j = 0; j < dgvData.Columns.Count; j++)
+                            {
+                                if (dgvData.Rows[i].Cells[j].Value != null)
+                                {
+                                    Console.WriteLine(dgvData.Rows[i].Cells[j].Value);
+
+                                    if (j == (dgvData.Columns.Count - 1))
+                                    {
+                                        if (int.TryParse(dgvData.Rows[i].Cells[j].Value.ToString(), out number))
+                                        {
+                                            StrQuery += dgvData.Rows[i].Cells[j].Value + ")";
+                                        }
+                                        else
+                                        {
+                                            StrQuery += "'" + dgvData.Rows[i].Cells[j].Value + "'";
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        if (int.TryParse(dgvData.Rows[i].Cells[j].Value.ToString(), out number))
+                                        {
+                                            StrQuery += dgvData.Rows[i].Cells[j].Value + ", ";
+                                        }
+                                        else
+                                        {
+                                            StrQuery += "'" + dgvData.Rows[i].Cells[j].Value + "', ";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        StrQuery += ") SET IDENTITY_INSERT " + frmMenu.TableText + " OFF;";
+                        Console.WriteLine(StrQuery);
+                        comm.CommandText = StrQuery;
+                        comm.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Registro insertado correctamente");
+                    try
+                    {
+                        using (StreamWriter bw = new StreamWriter(File.Open("LOG.txt", FileMode.Append)))
+                        {
+                            bw.WriteLine();
+                            bw.Write("Registro insertado en la tabla " + frmMenu.TableText);
+                        }
+
+                    } catch(Exception)
+                    {
+                        MessageBox.Show("Error de I/O");
+                    }
+
+                    this.Close();
+                }
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    MessageBox.Show("No se ha podido insertar el registro");
+                    using (StreamWriter bw = new StreamWriter(File.Open("LOG.txt", FileMode.Append)))
+                    {
+                        bw.WriteLine();
+                        bw.Write("Error al insertar registro en la tabla " + frmMenu.TableText);
+                    }
+                } catch(Exception)
+                {
+                    MessageBox.Show("Error de I/O");
+                }
+
+                this.Close();
             }
         }
     }

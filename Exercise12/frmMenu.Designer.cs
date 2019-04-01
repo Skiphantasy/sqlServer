@@ -1,4 +1,13 @@
-﻿namespace Exercise12
+﻿/*
+ * EXERCISE............: Exercise 12.
+ * NAME AND LASTNAME...: Tania López Martín 
+ * CURSE AND GROUP.....: 2º Interface Development 
+ * PROJECT.............: SQL Server
+ * DATE................: 13 Mar 2019
+ */
+
+
+namespace Exercise12
 {
     partial class frmMenu
     {
@@ -69,6 +78,7 @@
             this.btnModify.TabIndex = 2;
             this.btnModify.Text = "Modificar";
             this.btnModify.UseVisualStyleBackColor = true;
+            this.btnModify.Click += new System.EventHandler(this.btnModify_Click);
             // 
             // btnDelete
             // 
@@ -78,6 +88,7 @@
             this.btnDelete.TabIndex = 3;
             this.btnDelete.Text = "Eliminar";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // cmbTables
             // 
@@ -92,6 +103,7 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
+            this.lblName.BackColor = System.Drawing.Color.Transparent;
             this.lblName.Location = new System.Drawing.Point(19, 43);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(90, 13);
@@ -119,13 +131,15 @@
             // tsmiAbout
             // 
             this.tsmiAbout.Name = "tsmiAbout";
-            this.tsmiAbout.Size = new System.Drawing.Size(135, 22);
+            this.tsmiAbout.Size = new System.Drawing.Size(180, 22);
             this.tsmiAbout.Text = "Acerca de...";
+            this.tsmiAbout.Click += new System.EventHandler(this.tsmiAbout_Click);
             // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(237, 175);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.cmbTables);

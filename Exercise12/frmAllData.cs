@@ -1,29 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿/*
+ * EXERCISE............: Exercise 12.
+ * NAME AND LASTNAME...: Tania López Martín 
+ * CURSE AND GROUP.....: 2º Interface Development 
+ * PROJECT.............: SQL Server
+ * DATE................: 13 Mar 2019
+ */
+
+
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Exercise12
 {
     public partial class frmAllData : Form
     {
         private DataGridView dgvData;
-        //private BindingSource bindingSource = new BindingSource();
         private SqlDataAdapter dataAdapter;
+
         public frmAllData()
         {
             InitializeComponent();
-            dgvData = this.dgvInfo;
-            //bindingSource = this.dBCompanyDataSetBindingSource;
+            dgvData = this.dgvInfo;            
             Console.WriteLine(frmMenu.TableText);
-            //dgvData.DataSource = bindingSource;
             GetData("select * from " + frmMenu.TableText);
         }
 
@@ -34,11 +36,9 @@ namespace Exercise12
 
             if(width >= 800 && height >= 800)
             {
-                //dgvData.Width = width;
-                //dgvData.Height = height;
                 ClientSize = new Size(ClientSize.Width, ClientSize.Height);
-                //ClientSize = new Size(ClientSize.Width, dgvData.Height + 80);
-            } else if( width < 800 && height >= 800)
+            }
+            else if( width < 800 && height >= 800)
             {
                 dgvData.Width = width;
                 ClientSize = new Size(dgvData.Width + 60, ClientSize.Height);
@@ -72,17 +72,27 @@ namespace Exercise12
                     dgvInfo.DataSource = currentTable;
                 }
                               
+                /*dgvInfo.AutoResizeColumns(
+                   DataGridViewAutoSizeColumnsMode.AllCells);*/
+                //CorrectWindowSize();
+                dgvData.AllowUserToAddRows = false;
 
-                // Resize the DataGridView columns to fit the newly loaded content.
-                dgvInfo.AutoResizeColumns(
-                   DataGridViewAutoSizeColumnsMode.AllCells);
-                CorrectWindowSize();
+                try
+                {
+                    using (StreamWriter bw = new StreamWriter(File.Open("LOG.txt", FileMode.Append)))
+                    {
+                        bw.WriteLine();
+                        bw.Write("Se ha realizado una consulta sobre la tabla " + frmMenu.TableText);
+
+                    }
+                } catch(Exception)
+                {
+                    MessageBox.Show("Error de I/O");
+                }
             }
             catch (SqlException)
             {
-                MessageBox.Show("To run this example, replace the value of the " +
-                    "connectionString variable with a connection string that is " +
-                    "valid for your system.");
+                MessageBox.Show("Error al recuperar los datos");
             }
         }
     }
@@ -92,6 +102,7 @@ namespace Exercise12
         public static int CountGridWidth(DataGridView dgv)
         {
             int width = 0;
+
             foreach (DataGridViewColumn column in dgv.Columns)
                 if (column.Visible == true)
                     width += column.Width;
@@ -100,6 +111,7 @@ namespace Exercise12
         public static int CountGridHeight(DataGridView dgv)
         {
             int height = 0;
+
             foreach (DataGridViewRow row in dgv.Rows)
                 if (row.Visible == true)
                     height += row.Height;

@@ -1,7 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿/*
+ * EXERCISE............: Exercise 12.
+ * NAME AND LASTNAME...: Tania López Martín 
+ * CURSE AND GROUP.....: 2º Interface Development 
+ * PROJECT.............: SQL Server
+ * DATE................: 13 Mar 2019
+ */
+
+
+using System;
 using System.Windows.Forms;
 
 namespace Exercise12
@@ -14,9 +20,15 @@ namespace Exercise12
         [STAThread]
         static void Main()
         {
+            frmSplashScreen splash;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMenu());
+            splash = new frmSplashScreen();
+
+            if (splash.ShowDialog() == DialogResult.OK)
+            {
+                Application.Run(new frmMenu());
+            }
         }
     }
 }

@@ -1,4 +1,13 @@
-﻿namespace Exercise12
+﻿/*
+ * EXERCISE............: Exercise 12.
+ * NAME AND LASTNAME...: Tania López Martín 
+ * CURSE AND GROUP.....: 2º Interface Development 
+ * PROJECT.............: SQL Server
+ * DATE................: 13 Mar 2019
+ */
+
+
+namespace Exercise12
 {
     partial class frmAllData
     {
@@ -41,9 +50,9 @@
             // dgvInfo
             // 
             this.dgvInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvInfo.Location = new System.Drawing.Point(28, 42);
+            this.dgvInfo.Location = new System.Drawing.Point(12, 12);
             this.dgvInfo.Name = "dgvInfo";
-            this.dgvInfo.Size = new System.Drawing.Size(516, 292);
+            this.dgvInfo.Size = new System.Drawing.Size(284, 195);
             this.dgvInfo.TabIndex = 0;
             // 
             // dBCompanyDataSet
@@ -60,7 +69,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(574, 360);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(308, 217);
             this.Controls.Add(this.dgvInfo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmAllData";
